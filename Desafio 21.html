@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Música</title>
+    <style>
+        body {
+            background-color: #f0f8ff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #ff4500;
+        }
+        .question {
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+        .answers label {
+            display: block;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #ff4500;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 2em;
+            margin-top: 30px;
+        }
+        button:hover {
+            background-color: #d03317;
+        }
+        #results {
+            margin-top: 30px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz de Música</h1>
+        <div id="quiz"></div>
+        <button id="enviar-resposta">Enviar Resposta</button>
+        <div id="resultados"></div>
+    </div>
+
+    <script>
+        const contenedorQuiz = document.getElementById("quiz");
+        const contenedorResultados = document.getElementById("resultados");
+        const botaoEnviar = document.getElementById("enviar-resposta");
+
+        const minhasPerguntas = [
+            {
+                pergunta: "1) Quem é o vocalista principal do Nirvana?",
+                respostas: {
+                    a: "Kurt Cobain",
+                    b: "Dave Grohl",
+                    c: "Krist Novoselic",
+                    d: "Pat Smear"
+                },
+                respostaCorreta: "a"
+            },
+            {
+                pergunta: "2) Qual é o único instrumento tocado na música 'Blackbird' dos Beatles?",
+                respostas: {
+                    a: "Guitarra",
+                    b: "Piano",
+                    c: "Bateria",
+                    d: "Voz"
+                },
+                respostaCorreta: "a"
+            },
+            {
+                pergunta: "3) Quem é o vocalista principal do Foo Fighters?",
+                respostas: {
+                    a: "Dave Grohl",
+                    b: "Taylor Hawkins",
+                    c: "Nate Mendel",
+                    d: "Chris Shiflett"
+                },
+                respostaCorreta: "a"
+            },
+            {
+                pergunta: "4) Qual é o nome da banda liderada por Chris Cornell nos anos 90?",
+                respostas: {
+                    a: "Soundgarden",
+                    b: "Audioslave",
+                    c: "Temple of the Dog",
+                    d: "Pearl Jam"
+                },
+                respostaCorreta: "a"
+            },
+            {
+                pergunta: "5) Quem escreveu a música 'Yesterday' dos Beatles?",
+                respostas: {
+                    a: "John Lennon",
+                    b: "Paul McCartney",
+                    c: "George Harrison",
+                    d: "Ringo Starr"
+                },
+                respostaCorreta: "b"
+            }
+        ];
+
+        function construirQuiz() {
+            const saida = [];
+            minhasPerguntas.forEach(
+                (perguntaAtual, numeroDaPergunta) => {
+                    const respostas = [];
+                    for (letra in perguntaAtual.respostas) {
+                        respostas.push(
+                            `<label>
+                                <input type="radio" name="pergunta${numeroDaPergunta}" value="${letra}">
+                                ${letra} :
+                                ${perguntaAtual.respostas[letra]}
+                            </label>`
+                        );
+                    }
+                    saida.push(
+                        `<div class="pergunta"> ${perguntaAtual.pergunta} </div>
+                        <div class="respostas"> ${respostas.join('')} </div>`
+                    );
+                }
+            );
+            contenedorQuiz.innerHTML = saida.join('');
+        }
+
+        function mostrarResultados() {
+            const contenedoresRespostas = contenedorQuiz.querySelectorAll('.respostas');
+            let numCorretas = 0;
+
+            minhasPerguntas.forEach((perguntaAtual, numeroDaPergunta) => {
+                const contenedorRespostas = contenedoresRespostas[numeroDaPergunta];
+                const seletor = `input[name=pergunta${numeroDaPergunta}]:checked`;
+                const respostaUsuario = (contenedorRespostas.querySelector(seletor) || {}).value;
+
+                if (respostaUsuario === perguntaAtual.respostaCorreta) {
+                    numCorretas++;
+                    contenedoresRespostas[numeroDaPergunta].style.color = 'green';
+                } else {
+                    contenedoresRespostas[numeroDaPergunta].style.color = 'red';
+                }
+            });
+
+            contenedorResultados.innerHTML = `${numCorretas} de ${minhasPerguntas.length} corretas`;
+        }
+
+        construirQuiz();
+        botaoEnviar.addEventListener('click', mostrarResultados);
+    </script>
+</body>
+</html>
